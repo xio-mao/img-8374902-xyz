@@ -1,7 +1,6 @@
 "use client";
-export const dynamic = "force-dynamic";
 
-import { useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { App, Button } from "antd";
 import { Download, FileUp, Plus } from "lucide-react";
@@ -15,8 +14,10 @@ import type { CanvasExportFile } from "./export-types";
 import { useCanvasStore } from "./stores/use-canvas-store";
 import { useCanvasUiStore } from "./stores/use-canvas-ui-store";
 import { exportCanvasProjects } from "./utils/canvas-export";
+export const dynamic = "force-dynamic";
 
-export default function CanvasPage() {
+
+function CanvasPageContent() {
     const { message } = App.useApp();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -126,4 +127,12 @@ export default function CanvasPage() {
             <CanvasDeleteProjectsDialog />
         </main>
     );
+}
+
+export default function CanvasPage() {
+  return (
+    <Suspense fallback={null}>
+      <CanvasPageContent />
+    </Suspense>
+  );
 }
